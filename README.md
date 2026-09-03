@@ -10,7 +10,7 @@
 
 Um sistema completo, rápido e seguro para controle financeiro pessoal, integrando **inteligência artificial (Google Gemini)** para leitura e categorização automática de despesas e receitas, armazenamento em tempo real no **Firebase Firestore**, e arquitetura com autenticação Google restrita ao proprietário.
 
-🌐 **Ambiente de Produção Ativo**: [https://controle-financeiro-com-ia-668338672572.us-east1.run.app](https://controle-financeiro-com-ia-668338672572.us-east1.run.app)
+🌐 **Ambiente de Produção Ativo**: [https://ruben-massuquetto-financeiro.ai.studio/](https://ruben-massuquetto-financeiro.ai.studio/)
 
 ---
 
