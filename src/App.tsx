@@ -9,7 +9,6 @@ import { TransactionsTable } from './components/TransactionsTable';
 import { MonthlyBudgetView } from './components/MonthlyBudgetView';
 import { BudgetAlertBanner } from './components/BudgetAlertBanner';
 import { AuthGate } from './components/AuthGate';
-import { IpSecurityStatus } from './lib/security';
 import {
   Transaction,
   FinancialSummary,
@@ -34,12 +33,10 @@ import { AlertCircle } from 'lucide-react';
 
 function AuthenticatedDashboard({
   user,
-  onLogout,
-  ipStatus
+  onLogout
 }: {
   user: User;
   onLogout: () => Promise<void>;
-  ipStatus: IpSecurityStatus | null;
 }) {
   const [activeTab, setActiveTab] = useState<'finance' | 'budget'>('finance');
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth());
@@ -262,7 +259,6 @@ function AuthenticatedDashboard({
         monthlySummary={monthlyBudgetSummary}
         user={user}
         onLogout={onLogout}
-        boundIp={ipStatus?.boundIp || (ipStatus?.isLocked ? ipStatus.clientIp : null)}
       />
 
       {/* Main Bento Grid Container */}
@@ -341,8 +337,8 @@ function AuthenticatedDashboard({
 export default function App() {
   return (
     <AuthGate>
-      {({ user, onLogout, ipStatus }) => (
-        <AuthenticatedDashboard user={user} onLogout={onLogout} ipStatus={ipStatus} />
+      {({ user, onLogout }) => (
+        <AuthenticatedDashboard user={user} onLogout={onLogout} />
       )}
     </AuthGate>
   );

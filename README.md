@@ -62,12 +62,8 @@ Para disponibilizar este projeto com segurança no GitHub e em ambientes de prod
    - Permissão concedida apenas para requisições autenticadas cujo token JWT corresponda ao e-mail do proprietário autorizado.
    - Validação de formato e tamanho de IDs de documentos para prevenir injeções.
 
-4. **Vínculo de Dispositivo e Restrição por IP (`ip-security`)**:
-   - Mecanismo integrado no backend que permite amarrar a execução da aplicação exclusivamente ao IP da sua máquina/rede autorizada.
-   - Bloqueia chamadas para endpoints sensíveis caso a requisição venha de um IP não autorizado.
-
-5. **Proteção de Arquivos Sensíveis (`.gitignore`)**:
-   - Todos os arquivos `.env`, `.env.local`, logs e estados locais de segurança (`ip-security.json`) estão rigorosamente ignorados no versionamento Git.
+4. **Proteção de Arquivos Sensíveis (`.gitignore`)**:
+   - Todos os arquivos `.env`, `.env.local` e logs estão rigorosamente ignorados no versionamento Git.
    - É disponibilizado um modelo seguro `.env.example` e `firebase-applet-config.example.json`.
 
 ---
@@ -118,9 +114,6 @@ APP_URL="http://localhost:3000"
 # E-mail do proprietário que terá acesso exclusivo
 AUTHORIZED_EMAIL="seu_email@gmail.com"
 VITE_AUTHORIZED_EMAIL="seu_email@gmail.com"
-
-# Vínculo opcional de IP (deixe vazio para vincular via painel)
-AUTHORIZED_CLIENT_IP=
 ```
 
 ---

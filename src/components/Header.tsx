@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Target, AlertTriangle, CheckCircle, PlusCircle, LogOut, ShieldCheck, Laptop } from 'lucide-react';
+import { LayoutDashboard, Target, AlertTriangle, CheckCircle, PlusCircle, LogOut, ShieldCheck } from 'lucide-react';
 import { User } from 'firebase/auth';
 import { formatBRL, formatMonthName } from '../lib/utils';
 import { MonthlyBudgetSummary } from '../types';
@@ -20,8 +20,7 @@ export function Header({
   selectedMonth,
   monthlySummary,
   user,
-  onLogout,
-  boundIp
+  onLogout
 }: HeaderProps) {
   return (
     <header className="border-b border-slate-800/80 bg-[#09090b]/95 sticky top-0 z-30 backdrop-blur-md">
@@ -114,17 +113,6 @@ export function Header({
               <PlusCircle className="w-3.5 h-3.5 text-blue-400" />
               <span>Configurar Orçamento ({formatMonthName(selectedMonth).split(' ')[0]})</span>
             </button>
-          )}
-
-          {/* Bound IP Security Pill */}
-          {boundIp && (
-            <div
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-emerald-400"
-              title="Dispositivo amarrado com segurança ao IP autorizado"
-            >
-              <Laptop className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>IP Protegido</span>
-            </div>
           )}
 
           {/* Authenticated User Profile & Logout */}

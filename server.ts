@@ -1,66 +1,20 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
 import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-// ==========================================
-// IP SECURITY & DEVICE BINDING
-// ==========================================
-const IP_CONFIG_PATH = path.join(process.cwd(), 'ip-security.json');
-
-interface IpSecurityConfig {
-  boundIp: string | null;
-  boundAt: string | null;
-  boundUser: string;
-  isEnforced: boolean;
-}
-
 const DEFAULT_AUTHORIZED_USER =
   process.env.AUTHORIZED_EMAIL ||
   process.env.VITE_AUTHORIZED_EMAIL ||
   'rubenmassuquetto1999@gmail.com';
-
-function loadIpConfig(): IpSecurityConfig {
-  try {
-    if (fs.existsSync(IP_CONFIG_PATH)) {
-      const content = fs.readFileSync(IP_CONFIG_PATH, 'utf-8');
-      const data = JSON.parse(content);
-      if (data && typeof data === 'object') {
-        return data;
-      }
-    }
-  } catch (err) {
-    console.error('Falha ao ler configuração de IP:', err);
-  }
-  return {
-    boundIp: process.env.AUTHORIZED_CLIENT_IP || null,
-    boundAt: process.env.AUTHORIZED_CLIENT_IP ? new Date().toISOString() : null,
-    boundUser: DEFAULT_AUTHORIZED_USER,
-    isEnforced: true
-  };
-}
-
-function saveIpConfig(config: IpSecurityConfig) {
-  try {
-    fs.writeFileSync(IP_CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Falha ao salvar configuração de IP:', err);
-  }
-}
-
-let ipConfig: IpSecurityConfig = loadIpConfig();
 
 function getClientIp(req: express.Request): string {
   const forwarded = req.headers['x-forwarded-for'];
@@ -73,79 +27,33 @@ function getClientIp(req: express.Request): string {
   return req.socket.remoteAddress || req.ip || '127.0.0.1';
 }
 
-// IP Security Endpoints
+// IP Security Endpoints (IP lock disabled to prevent dynamic IPv6 rotation lockouts)
 app.get('/api/security/ip-status', (req, res) => {
   const clientIp = getClientIp(req);
-  const isLocked = !!ipConfig.boundIp;
-  const isAuthorized = !isLocked || clientIp === ipConfig.boundIp;
-
   res.json({
     clientIp,
-    boundIp: ipConfig.boundIp,
-    boundAt: ipConfig.boundAt,
-    boundUser: ipConfig.boundUser,
-    isLocked,
-    isAuthorized
+    boundIp: null,
+    boundAt: null,
+    boundUser: DEFAULT_AUTHORIZED_USER,
+    isLocked: false,
+    isAuthorized: true
   });
 });
 
 app.post('/api/security/bind-ip', (req, res) => {
   const clientIp = getClientIp(req);
-  const { force } = req.body || {};
-
-  if (ipConfig.boundIp && !force && clientIp !== ipConfig.boundIp) {
-    return res.status(403).json({
-      error: 'IP_MISMATCH',
-      message: 'Este IP não possui permissão para alterar o vínculo de segurança.',
-      clientIp,
-      boundIp: ipConfig.boundIp
-    });
-  }
-
-  ipConfig = {
-    boundIp: clientIp,
-    boundAt: new Date().toISOString(),
-    boundUser: DEFAULT_AUTHORIZED_USER,
-    isEnforced: true
-  };
-  saveIpConfig(ipConfig);
-
-  console.log(`[Segurança] Aplicação amarrada com sucesso ao IP do proprietário: ${clientIp}`);
-
   res.json({
     success: true,
     clientIp,
-    boundIp: ipConfig.boundIp,
-    boundAt: ipConfig.boundAt,
-    message: `Vínculo de segurança ativado exclusivamente para o IP: ${clientIp}`
+    boundIp: null,
+    boundAt: null,
+    isLocked: false,
+    message: 'Trava de IP desativada permanentemente.'
   });
 });
 
 app.post('/api/security/unbind-ip', (req, res) => {
-  const clientIp = getClientIp(req);
-  if (ipConfig.boundIp && clientIp !== ipConfig.boundIp) {
-    return res.status(403).json({ error: 'IP_MISMATCH' });
-  }
-  ipConfig = {
-    boundIp: null,
-    boundAt: null,
-    boundUser: DEFAULT_AUTHORIZED_USER,
-    isEnforced: true
-  };
-  saveIpConfig(ipConfig);
-  res.json({ success: true, message: 'Vínculo de IP resetado.' });
-});
-
-// Middleware for sensitive AI routes
-app.use('/api/classify', (req, res, next) => {
-  const clientIp = getClientIp(req);
-  if (ipConfig.boundIp && clientIp !== ipConfig.boundIp) {
-    return res.status(403).json({
-      error: 'IP_NOT_AUTHORIZED',
-      message: 'Acesso bloqueado: Este computador/rede não é o endereço IP autorizado.'
-    });
-  }
-  next();
+  res.json({ success: true, message: 'Trava de IP desativada.' });
 });
 
 // Lazy-initialized Gemini client

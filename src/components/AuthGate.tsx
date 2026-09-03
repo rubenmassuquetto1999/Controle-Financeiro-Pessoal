@@ -9,7 +9,6 @@ import {
   ArrowRight,
   Fingerprint,
   EyeOff,
-  GlobeLock,
   Shield
 } from 'lucide-react';
 import {
@@ -22,7 +21,6 @@ import {
 import {
   detectIncognito,
   getIpSecurityStatus,
-  bindCurrentIp,
   IpSecurityStatus
 } from '../lib/security';
 
@@ -54,7 +52,7 @@ export function AuthGate({ children }: AuthGateProps) {
         setIsIncognito(incognito);
       }
 
-      // 2. Check IP Lock status from server
+      // 2. Fetch neutral IP status
       const status = await getIpSecurityStatus();
       if (isMounted) {
         setIpStatus(status);
@@ -66,21 +64,6 @@ export function AuthGate({ children }: AuthGateProps) {
     const unsubscribe = subscribeAuth(async (currentUser) => {
       setUser(currentUser);
       setLoading(false);
-
-      // If user is authorized and IP is not bound yet, automatically lock to this computer
-      if (currentUser && isUserAuthorized(currentUser)) {
-        try {
-          const currentIpStatus = await getIpSecurityStatus();
-          setIpStatus(currentIpStatus);
-          if (!currentIpStatus.isLocked && currentIpStatus.clientIp) {
-            const updated = await bindCurrentIp();
-            setIpStatus(updated);
-            console.log('IP travado com sucesso para o computador do proprietário:', updated.boundIp);
-          }
-        } catch (e) {
-          console.error('Erro ao travar IP automaticamente:', e);
-        }
-      }
     });
 
     return () => {
@@ -93,17 +76,7 @@ export function AuthGate({ children }: AuthGateProps) {
     try {
       setIsLoggingIn(true);
       setAuthError(null);
-      const loggedUser = await loginWithGoogle();
-
-      // Automatically bind client IP if not yet locked
-      if (isUserAuthorized(loggedUser)) {
-        try {
-          const updated = await bindCurrentIp(false);
-          setIpStatus(updated);
-        } catch (e) {
-          console.warn('Falha no vínculo de IP:', e);
-        }
-      }
+      await loginWithGoogle();
     } catch (err: any) {
       console.error('Erro de autenticação Google:', err);
       if (err.code === 'auth/popup-closed-by-user') {
@@ -140,7 +113,7 @@ export function AuthGate({ children }: AuthGateProps) {
               Verificando Credenciais e Dispositivo
             </h2>
             <p className="text-xs text-slate-500 font-mono mt-1">
-              Validando e-mail, perfil do navegador e IP de rede...
+              Validando e-mail e credenciais de segurança...
             </p>
           </div>
         </div>
@@ -197,59 +170,7 @@ export function AuthGate({ children }: AuthGateProps) {
     );
   }
 
-  // 3. STRICT BLOCK: IP Address Lockout (Non-Authorized IP)
-  if (ipStatus && ipStatus.isLocked && !ipStatus.isAuthorized) {
-    return (
-      <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-red-600 selection:text-white">
-        <div className="w-full max-w-md">
-          <div className="bg-[#121215] border border-red-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/80 text-red-300 text-[11px] font-mono uppercase tracking-wider">
-                <GlobeLock className="w-3.5 h-3.5 text-red-400" />
-                <span>Bloqueio de Endereço IP</span>
-              </div>
-
-              <div className="h-14 w-14 bg-red-950/60 border border-red-800/80 rounded-2xl flex items-center justify-center text-red-400 mx-auto shadow-inner">
-                <GlobeLock className="w-7 h-7" />
-              </div>
-
-              <h1 className="text-xl font-bold tracking-tight text-slate-100">
-                Endereço IP Não Autorizado
-              </h1>
-
-              <p className="text-xs text-slate-400 leading-relaxed font-sans">
-                Esta aplicação foi amarrada exclusivamente ao endereço IP do computador oficial do proprietário. A conexão atual foi bloqueada.
-              </p>
-            </div>
-
-            <div className="space-y-3 bg-slate-900/90 border border-slate-800 rounded-xl p-4 text-xs font-mono">
-              <div>
-                <span className="text-slate-500 text-[10px] block mb-1">IP DETECTADO NESTA CONEXÃO (NEGADO):</span>
-                <div className="px-3 py-2 rounded-lg bg-red-950/40 border border-red-900/60 text-red-300 font-mono text-[11px] break-all">
-                  {ipStatus.clientIp}
-                </div>
-              </div>
-
-              <div>
-                <span className="text-slate-500 text-[10px] block mb-1">IP VINCULADO AO SEU COMPUTADOR:</span>
-                <div className="px-3 py-2 rounded-lg bg-emerald-950/30 border border-emerald-900/50 text-emerald-300 font-mono text-[11px] break-all">
-                  {ipStatus.boundIp}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 text-center">
-              <p className="text-[10px] text-slate-600 font-mono">
-                🔒 Para acessar, utilize a mesma rede e computador vinculados originalmente.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // 4. Unauthenticated User Screen (Google Chrome Profile Login)
+  // 3. Unauthenticated User Screen (Google Chrome Profile Login)
   if (!user) {
     return (
       <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col items-center justify-center p-4 font-sans selection:bg-blue-600 selection:text-white">

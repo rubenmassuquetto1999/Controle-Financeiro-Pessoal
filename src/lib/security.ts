@@ -71,37 +71,26 @@ export function isGoogleChrome(): boolean {
  * Checks IP lock status against the server.
  */
 export async function getIpSecurityStatus(): Promise<IpSecurityStatus> {
-  try {
-    const res = await fetch('/api/security/ip-status');
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-    return await res.json();
-  } catch (err) {
-    console.error('Erro ao verificar status de IP:', err);
-    return {
-      clientIp: 'Desconhecido',
-      boundIp: null,
-      boundAt: null,
-      boundUser: 'rubenmassuquetto1999@gmail.com',
-      isLocked: false,
-      isAuthorized: true
-    };
-  }
+  return {
+    clientIp: 'Dinâmico',
+    boundIp: null,
+    boundAt: null,
+    boundUser: 'rubenmassuquetto1999@gmail.com',
+    isLocked: false,
+    isAuthorized: true
+  };
 }
 
 /**
- * Locks and binds the application to the current client IP address.
+ * Trava de IP desativada para suportar rotação natural de endereços IPv6.
  */
-export async function bindCurrentIp(force = false): Promise<IpSecurityStatus> {
-  const res = await fetch('/api/security/bind-ip', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ force })
-  });
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Falha ao vincular IP');
-  }
-  return await res.json();
+export async function bindCurrentIp(): Promise<IpSecurityStatus> {
+  return {
+    clientIp: 'Dinâmico',
+    boundIp: null,
+    boundAt: null,
+    boundUser: 'rubenmassuquetto1999@gmail.com',
+    isLocked: false,
+    isAuthorized: true
+  };
 }
