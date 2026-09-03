@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "transactions": {
+      "title": "Transações",
+      "description": "Registros de movimentação financeira (entradas e saídas)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string", "description": "Data no formato YYYY-MM-DD" },
+        "type": { "type": "string", "enum": ["entrada", "saida"] },
+        "amount": { "type": "number" },
+        "local_name": { "type": "string" },
+        "local_type": { "type": "string", "enum": ["fisico", "online"] },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "subcategory": { "type": "string" },
+        "budget_group": { "type": "string", "enum": ["essencial", "investimento", "educacao", "lazer", "adicional", "receita"] },
+        "created_at": { "type": "string" }
+      },
+      "required": ["date", "type", "amount", "local_name", "local_type", "description", "category", "budget_group"]
+    },
+    "budgets": {
+      "title": "Orçamentos Mensais",
+      "description": "Definição de metas orçamentárias mensais e limites por grupo 50-30-20",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "month": { "type": "string", "description": "Mês no formato YYYY-MM" },
+        "total_expense_limit": { "type": "number" },
+        "expected_income": { "type": "number" },
+        "notes": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["month", "total_expense_limit", "expected_income"]
+    },
+    "categories": {
+      "title": "Categorias",
+      "description": "Categorias e subcategorias do plano financeiro",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "parent_category": { "type": "string" },
+        "type": { "type": "string", "enum": ["income", "expense"] },
+        "budget_group": { "type": "string" }
+      },
+      "required": ["name", "type", "budget_group"]
+    },
+    "locals": {
+      "title": "Locais e Estabelecimentos",
+      "description": "Base de dados inteligente de locais de compras frequentes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "local_type": { "type": "string", "enum": ["fisico", "online"] },
+        "category": { "type": "string" },
+        "subcategory": { "type": "string" },
+        "budget_group": { "type": "string" },
+        "type": { "type": "string", "enum": ["entrada", "saida"] },
+        "last_description": { "type": "string" },
+        "count": { "type": "number" },
+        "last_used": { "type": "string" }
+      },
+      "required": ["name", "local_type", "count"]
+    }
+  },
+  "firestore": {
+    "/transactions/{transactionId}": {
+      "schema": "transactions",
+      "description": "Coleção de transações financeiras"
+    },
+    "/budgets/{monthId}": {
+      "schema": "budgets",
+      "description": "Coleção de orçamentos mensais"
+    },
+    "/categories/{categoryId}": {
+      "schema": "categories",
+      "description": "Coleção de categorias base do sistema"
+    },
+    "/locals/{localId}": {
+      "schema": "locals",
+      "description": "Base de dados de locais e estabelecimentos frequentes"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAuthorizedOwner() {
+      return isSignedIn() &&
+        request.auth.token.email != null &&
+        (request.auth.token.email == 'rubenmassuquetto1999@gmail.com' ||
+         request.auth.token.email.lower() == 'rubenmassuquetto1999@gmail.com');
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    match /transactions/{transactionId} {
+      allow list: if isAuthorizedOwner();
+      allow get: if isAuthorizedOwner() && isValidId(transactionId);
+      allow create, update, delete: if isAuthorizedOwner() && isValidId(transactionId);
+    }
+
+    match /budgets/{monthId} {
+      allow list: if isAuthorizedOwner();
+      allow get: if isAuthorizedOwner() && isValidId(monthId);
+      allow create, update, delete: if isAuthorizedOwner() && isValidId(monthId);
+    }
+
+    match /categories/{categoryId} {
+      allow list: if isAuthorizedOwner();
+      allow get: if isAuthorizedOwner() && isValidId(categoryId);
+      allow create, update, delete: if isAuthorizedOwner() && isValidId(categoryId);
+    }
+
+    match /locals/{localId} {
+      allow list: if isAuthorizedOwner();
+      allow get: if isAuthorizedOwner() && isValidId(localId);
+      allow create, update, delete: if isAuthorizedOwner() && isValidId(localId);
+    }
+  }
+}

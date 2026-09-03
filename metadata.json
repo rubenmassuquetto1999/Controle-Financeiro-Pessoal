@@ -1,0 +1,6 @@
+{
+  "name": "Controle Financeiro com IA",
+  "description": "Sistema de controle financeiro pessoal com classificação automática e inteligente de transações e gestão de orçamento mensal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
