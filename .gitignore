@@ -20,6 +20,8 @@ ip-security.json
 .env.production.local
 .env.*
 !.env.example
+firebase-applet-config.json
+!firebase-applet-config.example.json
 
 # Logs
 logs/
