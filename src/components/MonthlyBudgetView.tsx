@@ -236,14 +236,14 @@ export function MonthlyBudgetView({
   return (
     <div className="space-y-4">
       {/* 1. Month Navigation Header Bento Bar */}
-      <div className="bg-[#18181b] border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-[#18181b] border border-slate-800 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         {/* Month Selector Controls */}
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 bg-blue-600/20 border border-blue-500/30 rounded-xl flex items-center justify-center text-blue-400">
-            <Calendar className="w-5 h-5" />
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="h-9 w-9 sm:h-10 sm:w-10 bg-blue-600/20 border border-blue-500/30 rounded-xl flex items-center justify-center text-blue-400 shrink-0">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => onMonthChange(getAdjacentMonth(selectedMonth, -1))}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors cursor-pointer"
@@ -252,7 +252,7 @@ export function MonthlyBudgetView({
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <h2 className="text-base font-bold text-slate-100 font-sans">
+              <h2 className="text-sm sm:text-base font-bold text-slate-100 font-sans">
                 {formatMonthName(selectedMonth)}
               </h2>
 
@@ -264,19 +264,19 @@ export function MonthlyBudgetView({
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
               Planejamento Orçamentário vs Gastos Reais
             </p>
           </div>
         </div>
 
         {/* Action quick buttons */}
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-3 gap-1.5 w-full sm:w-auto sm:flex sm:items-center sm:gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onMonthChange(getCurrentMonth())}
-            className="text-xs font-mono border-slate-700 hover:bg-slate-800 text-slate-300"
+            className="text-[11px] sm:text-xs font-mono border-slate-700 hover:bg-slate-800 text-slate-300 px-2 sm:px-3"
           >
             Mês Atual
           </Button>
@@ -285,22 +285,22 @@ export function MonthlyBudgetView({
             variant="outline"
             size="sm"
             onClick={handleCopyPreviousMonth}
-            className="text-xs font-mono border-slate-700 hover:bg-slate-800 text-slate-300"
+            className="text-[11px] sm:text-xs font-mono border-slate-700 hover:bg-slate-800 text-slate-300 px-2 sm:px-3"
             title="Copiar limites definidos no mês anterior"
           >
-            <Copy className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
-            Copiar Mês Anterior
+            <Copy className="w-3.5 h-3.5 mr-1 text-slate-400 shrink-0" />
+            <span className="hidden xs:inline">Copiar</span> Mês Ant.
           </Button>
 
           <Button
             variant="secondary"
             size="sm"
             onClick={handleApply503020Rule}
-            className="text-xs font-mono bg-blue-950/60 border-blue-800/60 hover:bg-blue-900/60 text-blue-300"
+            className="text-[11px] sm:text-xs font-mono bg-blue-950/60 border-blue-800/60 hover:bg-blue-900/60 text-blue-300 px-2 sm:px-3"
             title="Calcular distribuição automática: 50% Essencial, 20% Investimentos, 20% Lazer, 10% Educação"
           >
-            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-            Regra 50-30-20
+            <Sparkles className="w-3.5 h-3.5 mr-1 text-blue-400 shrink-0" />
+            50-30-20
           </Button>
         </div>
       </div>
@@ -324,7 +324,7 @@ export function MonthlyBudgetView({
       )}
 
       {/* 2. Top Bento Summary Cards: Planned vs Actual */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Card 1: Receita Prevista vs Real */}
         <div className="bg-[#18181b] border border-slate-800 rounded-xl p-4 relative overflow-hidden">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono mb-1">

@@ -30,6 +30,7 @@ import {
   getCurrentMonth
 } from './lib/utils';
 import { AlertCircle } from 'lucide-react';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 function AuthenticatedDashboard({
   user,
@@ -262,7 +263,7 @@ function AuthenticatedDashboard({
       />
 
       {/* Main Bento Grid Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-4">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-3 sm:space-y-4">
         {/* Error Alert */}
         {errorMessage && (
           <div className="p-3 rounded-xl bg-red-950/40 border border-red-800/40 text-red-300 text-xs font-mono flex items-center justify-between shadow-xs">
@@ -281,7 +282,7 @@ function AuthenticatedDashboard({
 
         {/* View 1: Controle Financeiro */}
         {activeTab === 'finance' && (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {/* Live Budget Comparison Banner (Ties Budget to Financial Tracking) */}
             <BudgetAlertBanner
               summary={monthlyBudgetSummary}
@@ -293,14 +294,14 @@ function AuthenticatedDashboard({
             <DashboardCards summary={financialSummary} />
 
             {/* 2. Main Middle Bento Row: Left Form & Right Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-stretch">
               {/* Left Column: Transaction Form (5 cols on lg) */}
               <div className="lg:col-span-5 flex flex-col">
                 <TransactionForm />
               </div>
 
               {/* Right Column: 2 Visual Bento Chart Modules (7 cols on lg) */}
-              <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <BudgetPieChart
                   data={budgetGroupData}
                   totalExpense={financialSummary.totalExpense}
@@ -327,9 +328,12 @@ function AuthenticatedDashboard({
       </main>
 
       {/* Bento Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#09090b] py-3.5 text-center text-slate-500 text-xs font-mono">
+      <footer className="border-t border-slate-800/80 bg-[#09090b] py-3.5 px-4 text-center text-slate-500 text-[10px] sm:text-xs font-mono">
         FIN-AI • CONTROLE FINANCEIRO COM CLASSIFICAÇÃO INTELIGENTE • GESTÃO DE ORÇAMENTO MENSAL
       </footer>
+
+      {/* Offline Status Toast */}
+      <OfflineIndicator />
     </div>
   );
 }

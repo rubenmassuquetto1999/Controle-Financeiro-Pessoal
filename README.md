@@ -16,6 +16,19 @@ Um sistema completo, rápido e seguro para controle financeiro pessoal, integran
 
 ## ✨ Funcionalidades Principais
 
+- 💻 **Instalável como Aplicativo no Computador e Celular (PWA - Progressive Web App)**:
+  - **Execução Nativa no Desktop**: Instalação direta pelo Google Chrome, Edge ou Brave no Windows, macOS ou Linux.
+  - **Janela Dedicada e Atalho Próprio**: Abre em janela limpa independente sem barras de endereço ou abas do navegador, com ícone próprio na Área de Trabalho e no Menu Iniciar / Dock.
+  - **Botão de Instalação no Header**: Botão `Instalar App` integrado com detecção de prontidão do navegador e assistente com passo a passo.
+  - **Suporte Offline com Cache Seguro**: Carregamento instantâneo via service workers e aviso visual caso a conexão oscile.
+
+- 📱 **Interface 100% Responsiva (Mobile, Tablet & Desktop)**:
+  - **Design Bento Grid Adaptativo**: Layout fluido que se ajusta automaticamente a smartphones, tablets (retrato/paisagem) e monitores ultrawide.
+  - **Navegação Móvel Otimizada**: Header responsivo com barra de navegação segmentada touch-friendly em telas menores e abas completas no desktop.
+  - **Visualização em Cards para Dispositivos Móveis**: Transações apresentadas em cards elegantes com toque rápido, tags de grupo de orçamento e botões de ação ergonômicos (mínimo 44px) em telas `< md`.
+  - **Dashboard de Métricas Compacto**: Grade 2x2 de indicadores em smartphones para visualização imediata de receitas, despesas, saldo e taxa de poupança sem necessidade de rolagem excessiva.
+  - **Filtros e Controles Tácteis**: Seletores de mês, tipo e grupo reorganizados em grade inteligente para fácil uso com uma mão.
+
 - 🤖 **Classificação Automática por IA (Google Gemini)**:
   - Digite transações em linguagem natural (ex: *"Comprei ferramentas no GoBoox Drop por 120 no crédito"* ou *"Salário líquido da empresa 4500"*).
   - O Gemini extrai automaticamente: **Valor**, **Data**, **Tipo** (*Despesa* ou *Receita*), **Forma de Pagamento**, **Estabelecimento/Local**, **Grupo de Orçamento** e **Categoria**.

@@ -44,7 +44,7 @@ export function BudgetPieChart({ data, totalExpense }: BudgetPieChartProps) {
         </div>
       ) : (
         <div className="flex-1 flex flex-col justify-between space-y-4">
-          <div className="h-44 w-full relative flex items-center justify-center">
+          <div className="h-44 min-h-[176px] w-full min-w-0 relative flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
