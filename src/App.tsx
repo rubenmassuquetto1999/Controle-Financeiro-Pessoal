@@ -250,8 +250,13 @@ function AuthenticatedDashboard({
       .slice(0, 5);
   }, [transactions]);
 
+  // Reset scroll and window alignment when entering dashboard
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#09090b] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#09090b] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* Bento Header with Navigation Tabs & Live Alert Indicator */}
       <Header
         activeTab={activeTab}

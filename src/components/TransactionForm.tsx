@@ -13,7 +13,11 @@ import {
   Check,
   RotateCcw,
   X,
-  ChevronDown
+  ChevronDown,
+  Calendar,
+  DollarSign,
+  FileText,
+  Tag
 } from 'lucide-react';
 import { formatBRL, getBudgetGroupBadgeClass } from '../lib/utils';
 
@@ -263,91 +267,109 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
           {/* Row 1: Data & Tipo */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Data</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+            <div className="space-y-1.5 min-w-0">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <Calendar className="w-3.5 h-3.5 text-blue-400" />
+                Data *
+              </label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 disabled={isClassifying}
                 required
-                className="w-full bg-[#09090b] border border-slate-700 rounded-lg p-2 text-xs text-slate-100 outline-none focus:border-blue-500 transition-colors"
+                className="w-full h-11 px-3 rounded-xl bg-[#09090b] border border-slate-700/80 text-sm text-slate-100 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors font-sans box-border"
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Tipo</label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value as TransactionType)}
-                disabled={isClassifying}
-                className="w-full bg-[#09090b] border border-slate-700 rounded-lg p-2 text-xs text-slate-100 outline-none focus:border-blue-500 transition-colors cursor-pointer"
-              >
-                <option value="saida">Saída (Despesa)</option>
-                <option value="entrada">Entrada (Receita)</option>
-              </select>
+            <div className="space-y-1.5 min-w-0">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <Tag className="w-3.5 h-3.5 text-blue-400" />
+                Tipo *
+              </label>
+              <div className="relative">
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value as TransactionType)}
+                  disabled={isClassifying}
+                  className="w-full h-11 px-3 pr-9 rounded-xl bg-[#09090b] border border-slate-700/80 text-sm font-semibold text-slate-100 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors cursor-pointer appearance-none -webkit-appearance-none box-border"
+                >
+                  <option value="saida">📉 Saída (Despesa)</option>
+                  <option value="entrada">📈 Entrada (Receita)</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
             </div>
           </div>
 
           {/* Row 2: Valor (BRL) */}
-          <div className="space-y-1">
+          <div className="space-y-1.5 min-w-0">
             <div className="flex justify-between items-center">
-              <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Valor (BRL)</label>
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                Valor (BRL) *
+              </label>
               {rawAmount && (
-                <span className="text-[10px] font-mono text-slate-400">
+                <span className="text-xs font-mono text-slate-400">
                   {formatBRL(parseAmount(rawAmount))}
                 </span>
               )}
             </div>
-            <input
-              type="text"
-              placeholder="0,00"
-              value={rawAmount}
-              onChange={handleAmountChange}
-              disabled={isClassifying}
-              required
-              className={`w-full bg-[#09090b] border border-slate-700 rounded-lg p-2 text-sm font-mono outline-none focus:border-blue-500 transition-colors ${
-                type === 'entrada' ? 'text-green-400' : 'text-red-400'
-              }`}
-            />
+            <div className="relative">
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono font-bold text-slate-500 pointer-events-none">
+                R$
+              </span>
+              <input
+                type="text"
+                placeholder="0,00"
+                inputMode="decimal"
+                value={rawAmount}
+                onChange={handleAmountChange}
+                disabled={isClassifying}
+                required
+                className={`w-full h-11 pl-10 pr-3 rounded-xl bg-[#09090b] border border-slate-700/80 text-sm font-mono font-bold outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors box-border ${
+                  type === 'entrada' ? 'text-green-400' : 'text-red-400'
+                }`}
+              />
+            </div>
           </div>
 
           {/* Row 3: Local com Base de Dados Inteligente */}
-          <div className="space-y-1 relative" ref={dropdownRef}>
+          <div className="space-y-1.5 relative min-w-0" ref={dropdownRef}>
             <div className="flex items-center justify-between">
-              <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider flex items-center gap-1.5">
-                <Store className="w-3 h-3 text-slate-400" />
-                Local / Estabelecimento
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <Store className="w-3.5 h-3.5 text-slate-400" />
+                Local / Estabelecimento *
               </label>
 
               {/* Formato do Local Toggle */}
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800">
                 <button
                   type="button"
                   onClick={() => setLocalType('fisico')}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-colors cursor-pointer ${
+                  className={`px-2 py-0.5 rounded-md text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer ${
                     localType === 'fisico'
                       ? 'bg-slate-700 text-white font-semibold'
                       : 'text-slate-500 hover:text-slate-300'
                   }`}
                   title="Estabelecimento Físico"
                 >
-                  <Store className="w-2.5 h-2.5" /> Físico
+                  <Store className="w-3 h-3" /> Físico
                 </button>
                 <button
                   type="button"
                   onClick={() => setLocalType('online')}
-                  className={`px-1.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-colors cursor-pointer ${
+                  className={`px-2 py-0.5 rounded-md text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer ${
                     localType === 'online'
                       ? 'bg-blue-600 text-white font-semibold'
                       : 'text-slate-500 hover:text-slate-300'
                   }`}
                   title="Compra ou Serviço Online"
                 >
-                  <Globe className="w-2.5 h-2.5" /> Online
+                  <Globe className="w-3 h-3" /> Online
                 </button>
               </div>
             </div>
@@ -367,15 +389,15 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
                 }}
                 disabled={isClassifying}
                 required
-                className="w-full bg-[#09090b] border border-slate-700 rounded-lg p-2 pr-8 text-xs text-slate-100 outline-none focus:border-blue-500 transition-colors"
+                className="w-full h-11 px-3 pr-10 rounded-xl bg-[#09090b] border border-slate-700/80 text-sm text-slate-100 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600 font-sans box-border"
               />
               <button
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-1 cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 p-1.5 cursor-pointer"
                 title="Ver locais salvos na base"
               >
-                <ChevronDown className="w-3.5 h-3.5" />
+                <ChevronDown className="w-4 h-4" />
               </button>
             </div>
 
@@ -489,8 +511,11 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
           </div>
 
           {/* Row 4: Descritivo */}
-          <div className="space-y-1">
-            <label className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Descritivo</label>
+          <div className="space-y-1.5 min-w-0">
+            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+              <FileText className="w-3.5 h-3.5 text-slate-400" />
+              Descritivo *
+            </label>
             <input
               type="text"
               placeholder="Ex: Abastecimento viagem trabalho, compras do mês..."
@@ -498,7 +523,7 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
               onChange={(e) => setDescription(e.target.value)}
               disabled={isClassifying}
               required
-              className="w-full bg-[#09090b] border border-slate-700 rounded-lg p-2 text-xs text-slate-100 outline-none focus:border-blue-500 transition-colors"
+              className="w-full h-11 px-3 rounded-xl bg-[#09090b] border border-slate-700/80 text-sm text-slate-100 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder:text-slate-600 font-sans box-border"
             />
           </div>
 
@@ -614,7 +639,7 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
           <button
             type="submit"
             disabled={isClassifying}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold py-3 rounded-lg mt-3 transition-colors tracking-wide uppercase cursor-pointer"
+            className="w-full h-12 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-xs font-bold rounded-xl mt-3 transition-colors tracking-wide uppercase cursor-pointer flex items-center justify-center gap-2 shadow-xs shadow-blue-600/30"
           >
             {isClassifying ? 'REGISTRANDO...' : 'REGISTRAR TRANSAÇÃO'}
           </button>

@@ -11,31 +11,24 @@ export interface IpSecurityStatus {
 
 /**
  * Checks whether the current window is running in an Incognito / Private browsing context.
- * Uses multi-heuristic tests specific to Google Chrome and modern Chromium.
+ * Carefully avoids false positives on mobile devices, PWAs, or low-storage environments.
  */
 export async function detectIncognito(): Promise<boolean> {
   try {
-    // 1. Quota & Persistence heuristic in Chromium
-    if ('storage' in navigator && 'estimate' in navigator.storage) {
-      const { quota } = await navigator.storage.estimate();
-      // Regular Google Chrome allocates a huge quota based on actual hard drive space (>10GB).
-      // Incognito mode caps temporary quota to a small fraction of RAM or max ~2-4GB.
-      if (quota && quota < 3 * 1024 * 1024 * 1024) {
-        if ('persist' in navigator.storage) {
-          try {
-            const isPersisted = await navigator.storage.persisted();
-            const canPersist = await navigator.storage.persist();
-            if (!isPersisted && !canPersist) {
-              return true;
-            }
-          } catch {
-            return true;
-          }
-        }
-      }
+    // Mobile browsers, iOS WebClips, and PWAs naturally have quota constraints and cannot be tested via desktop quota heuristics.
+    const isMobile =
+      typeof navigator !== 'undefined' &&
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isStandalone =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone?: boolean })?.standalone === true);
+
+    if (isMobile || isStandalone) {
+      return false;
     }
 
-    // 2. Chromium FileSystem API heuristic
+    // 1. Chromium FileSystem API heuristic (specific to desktop Chromium incognito)
     const fs = (window as any).RequestFileSystem || (window as any).webkitRequestFileSystem;
     if (fs) {
       const isIncognitoFs = await new Promise<boolean>((resolve) => {

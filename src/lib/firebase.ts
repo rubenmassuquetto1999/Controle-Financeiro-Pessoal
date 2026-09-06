@@ -21,6 +21,12 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  setPersistence,
+  browserLocalPersistence,
   signOut,
   onAuthStateChanged,
   User,
@@ -51,6 +57,17 @@ export function isUserAuthorized(user: User | null): boolean {
   return user.email.trim().toLowerCase() === AUTHORIZED_EMAIL.toLowerCase();
 }
 
+export function isMobileOrStandalone(): boolean {
+  if (typeof window === 'undefined') return false;
+  const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as unknown as { standalone?: boolean })?.standalone === true;
+  const isMobile =
+    typeof navigator !== 'undefined' &&
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return isStandalone || isMobile;
+}
+
 export function getFirebaseApp(): FirebaseApp {
   if (!app) {
     if (getApps().length > 0) {
@@ -76,6 +93,9 @@ export function getFirebaseDb(): Firestore {
 export function getFirebaseAuth(): Auth {
   if (!auth) {
     auth = getAuth(getFirebaseApp());
+    setPersistence(auth, browserLocalPersistence).catch((err) => {
+      console.warn('Falha ao definir persistência de autenticação:', err);
+    });
   }
   return auth;
 }
@@ -86,8 +106,41 @@ export async function loginWithGoogle(): Promise<User> {
   provider.setCustomParameters({
     prompt: 'select_account'
   });
+
+  // Always use popup directly. This prevents mobile redirect loops and cookie partitioning failures on cross-site domains (*.run.app vs *.firebaseapp.com)
   const result = await signInWithPopup(authInstance, provider);
   return result.user;
+}
+
+export async function loginWithGoogleRedirect(): Promise<void> {
+  const authInstance = getFirebaseAuth();
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: 'select_account'
+  });
+  await signInWithRedirect(authInstance, provider);
+}
+
+export async function checkRedirectResult(): Promise<User | null> {
+  const authInstance = getFirebaseAuth();
+  try {
+    const result = await getRedirectResult(authInstance);
+    return result ? result.user : null;
+  } catch (err: any) {
+    console.error('Erro ao verificar resultado do redirect:', err);
+    throw err;
+  }
+}
+
+export async function loginWithEmail(email: string, password: string): Promise<User> {
+  const authInstance = getFirebaseAuth();
+  const result = await signInWithEmailAndPassword(authInstance, email.trim(), password);
+  return result.user;
+}
+
+export async function sendPasswordReset(email: string): Promise<void> {
+  const authInstance = getFirebaseAuth();
+  await sendPasswordResetEmail(authInstance, email.trim());
 }
 
 export async function logoutUser(): Promise<void> {
