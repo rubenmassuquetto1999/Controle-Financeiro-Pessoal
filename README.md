@@ -16,9 +16,32 @@ Um sistema completo, veloz e seguro para controle financeiro pessoal, integrando
 
 ## ✨ Funcionalidades Principais
 
+- 🧠 **Conselheiro Estratégico Financeiro Pessoal (8 Mestres da Riqueza)**:
+  - **Síntese Estratégica Unificada**: Combina os modelos mentais e princípios de **Warren Buffett**, **Charlie Munger**, **Ray Dalio**, **Naval Ravikant**, **Morgan Housel**, **Alex Hormozi**, **Peter Thiel** e **Andrew Carnegie**.
+  - **Posicionamento de Destaque**: Localizado estrategicamente na tela de controle financeiro, **imediatamente acima da tabela de transações registradas**, permitindo auditar a saúde financeira antes de inspecionar os lançamentos.
+  - **Cruzamento em Tempo Real**: Cruza automaticamente as transações reais do mês (receitas, despesas, saldo líquido, cumprimento do teto e despesas por grupo) com o plano mestre de multiplicação de patrimônio sustentável.
+  - **Diagnóstico & KPIs Estratégicos**:
+    - Score de saúde financeira (0 a 100) calibrado matematicamente com base nos dados do usuário.
+    - 4 indicadores executivos: *Taxa de Poupança/Queima*, *Disciplina Orçamentária*, *Meta de Passivos e Dívidas* e *Runway & Liquidez de Emergência*.
+    - Módulos direcionados de *Estratégia Avalanche* (eliminação de juros altos) e *Alavancagem de Renda & Escala*.
+  - **Os 4 Pilares dos Mestres**:
+    - 🛡️ *Inversão e Margem de Segurança* (Buffett & Munger): Proteção de caixa e prevenção de erros capitais.
+    - ⚙️ *A Máquina Econômica e Gestão de Risco* (Dalio & Carnegie): Tratamento do orçamento como sistema de engenharia e busca por fluxos previsíveis de caixa.
+    - ⚡ *Alavancagem de Margem e Escala* (Hormozi & Thiel): Foco em aumento de ticket médio, diferenciação e produtos/serviços de alto valor.
+    - 🧘 *Alavancagem Sem Permissão e Psicologia* (Naval & Housel): Uso de tecnologia e disciplina mental para construir liberdade financeira duradoura.
+  - **Plano de Ação 80/20 & Rota**: Ações prioritárias ranqueadas por urgência e impacto para os próximos 30 dias.
+  - **Janela Interativa de Decisão ("Conselho dos 8 Mestres")**:
+    - Modal imersivo e responsivo (`AdvisorChatModal.tsx`) para diálogo aprofundado com a banca de mentores.
+    - Histórico sequencial de conversa mantido durante toda a sessão.
+    - Sugestões estratégicas rápidas em 1 clique (avaliação de compras parceladas, investimentos, corte de custos supérfluos, runway e escala de renda).
+    - Respostas formatadas em Markdown com diagnósticos diretos, perspectivas contrastadas por mestre e plano de execução prático.
+
 - 📱 **Otimização Extrema para Mobile (iPhone / iOS & Android)**:
-  - **Formulário com Alturas Uniformes**: Campos de entrada (**Data**, **Tipo**, **Valor**, **Local** e **Descritivo**) padronizados com altura de 44px (`h-11`), em total conformidade com as diretrizes de toque da Apple (*Human Interface Guidelines*).
-  - **Prevenção de Zoom Indesejado no iOS**: Inputs configurados a 16px no mobile e normalizados com `-webkit-appearance: none` para impedir que o Safari aplique zoom automático ou distorça o seletor nativo de data.
+  - **Botão "Reavaliar" com Ergonomia Tátil**: Botão em largura total (`w-full`) e altura de toque expandida (`py-2.5`, `rounded-xl`) no mobile, seguindo o padrão ergonômico do banner de alertas.
+  - **Alinhamento Ótico de Precisão**: Centralização vertical rigorosa entre o título do Conselheiro e o badge *8 Mestres da Riqueza*, com ocultação seletiva da lista de nomes em smartphones (`hidden sm:block`) para evitar poluição visual.
+  - **Prevenção de Transbordamento em Formulários**: Inputs com `min-w-0` e botões de envio com `shrink-0` e `whitespace-nowrap`, garantindo que o botão "Perguntar" permaneça perfeitamente enquadrado em qualquer tamanho de tela.
+  - **Formulário com Alturas Uniformes**: Campos de entrada (**Data**, **Tipo**, **Valor**, **Local** e **Descritivo**) padronizados com altura de 44px (`h-11`), em total conformidade com as diretrizes da Apple (*Human Interface Guidelines*).
+  - **Prevenção de Zoom Indesejado no iOS**: Inputs configurados a 16px no mobile e normalizados com `-webkit-appearance: none` para impedir que o Safari aplique zoom automático ou distorça seletores de data.
   - **Banner de Orçamento Responsivo**: Mensagens de teto e porcentagens de consumo com quebra de linha inteligente e botões de ação com largura total no celular para evitar sobreposições.
   - **Gráfico de Pizza Interativo & Anti-Sobreposição**: Cartão de detalhes flutuante (tooltip) com fundo 100% opaco (`bg-[#121215]`), alta prioridade visual (`z-50`) e ocultação automática do valor central durante a inspeção de fatias para manter a legibilidade limpa.
 
@@ -45,9 +68,12 @@ Um sistema completo, veloz e seguro para controle financeiro pessoal, integrando
   - Reconhecimento automático e salvamento de estabelecimentos frequentes.
   - Suporte a marcação de estabelecimentos **Físicos** vs. **Online** com preenchimento preditivo.
 
-- 📊 **Metas e Orçamento Mensal**:
-  - Teto de gastos configurável por grupo a cada mês.
-  - Alertas automáticos antecipados quando o consumo se aproxima ou excede o limite estabelecido.
+- 📊 **Metas e Orçamento Mensal Hierárquico por Itens Rotineiros**:
+  - **Lançamento de Itens Específicos por Grupo**: Permite cadastrar despesas e contas rotineiras diretamente em cada categoria (ex: em *Essencial*: Aluguel, Água, Luz, Internet, Supermercado; em *Investimento*: CDB, Tesouro, FIIs, Ações, Cripto; em *Lazer*: Restaurantes, Netflix/Streaming, Passeios).
+  - **Soma Dinâmica nos Separadores**: Cada cabeçalho de grupo exibe automaticamente o valor total somado em tempo real ao lado da identificação da categoria (ex: `Lazer (Restaurantes, Viagens, Streaming) - Total: R$ 0,00`).
+  - **Flexibilidade Total**: Opção de adicionar e remover qualquer item rotineiro com 1 clique, além de chips com sugestões rápidas de despesas frequentes.
+  - **Acompanhamento no Painel**: Visualização dos itens planejados vinculada ao acompanhamento em tempo real de realizado vs. planejado.
+  - **Regra 50-30-20 & Cópia Inteligente**: Atalho para aplicar distribuição percentual automática e botão para replicar toda a estrutura do mês anterior.
 
 - 📈 **Painel de Métricas & Exportação**:
   - Indicadores de Saldo Atual, Receitas, Despesas e Investimentos.
@@ -64,7 +90,7 @@ Um sistema completo, veloz e seguro para controle financeiro pessoal, integrando
 ## 🔒 Protocolos de Segurança Implementados
 
 1. **Isolamento Total da Chave da IA (Zero Client-Side Secrets)**:
-   - A chave **`GEMINI_API_KEY`** é utilizada **exclusivamente no servidor Express (`server.ts`)**.
+   - A chave **`GEMINI_API_KEY`** é utilizada **exclusivamente no servidor Express (`server.ts`)** para todas as operações da IA: tanto para a categorização de transações (`/api/classify`) quanto para as auditorias estratégicas e chat do conselho (`/api/advisor/analyze` e `/api/advisor/ask`).
    - O frontend nunca expõe a chave da IA em requisições ou arquivos estáticos enviados ao navegador.
 
 2. **Autenticação com Restrição de E-mail (Google OAuth)**:
@@ -191,15 +217,17 @@ Acesse no navegador: **`http://localhost:3000`**
 ├── firestore.rules                     # Regras de segurança granulares do Firestore
 ├── index.html                          # Entry-point HTML com metatags responsivas e PWA
 ├── package.json                        # Dependências e scripts de execução
-├── server.ts                           # Servidor Express com proxy seguro da Gemini API
+├── server.ts                           # Servidor Express com rotas protegidas (/api/classify, /api/advisor/*)
 ├── tsconfig.json                       # Configurações do compilador TypeScript
 ├── vite.config.ts                      # Configuração do Vite, Tailwind CSS e PWA
 └── src/
     ├── App.tsx                         # Dashboard principal e navegação de abas
     ├── main.tsx                        # Ponto de montagem do React 19
     ├── index.css                       # Estilização global e normalizações mobile/WebKit
-    ├── types.ts                        # Interfaces TypeScript (Transações, Grupos, Metas)
+    ├── types.ts                        # Interfaces TypeScript (Transações, Grupos, Metas, Advisor)
     ├── components/
+    │   ├── AdvisorChatModal.tsx        # Modal interativo de consulta ao Conselho dos 8 Mestres
+    │   ├── AIStrategicAdvisorCard.tsx  # Card do Conselheiro Estratégico (8 Mestres, KPIs, 80/20, Chat)
     │   ├── AuthGate.tsx                # Barreira de segurança (Google Auth + Anti-Incognito)
     │   ├── BudgetAlertBanner.tsx       # Banner responsivo de acompanhamento de teto orçamentário
     │   ├── BudgetPieChart.tsx          # Gráfico de pizza com tooltip opaco e foco de fatias
@@ -220,6 +248,17 @@ Acesse no navegador: **`http://localhost:3000`**
         ├── seedData.ts                 # Categorias padrão brasileiras e valores iniciais
         └── utils.ts                    # Formatadores de moeda (BRL), datas e funções auxiliares
 ```
+
+---
+
+## 🔌 Rotas da API Server-Side (`server.ts`)
+
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Checagem de integridade do servidor Express |
+| `POST` | `/api/classify` | Interpretação e categorização de despesas/receitas via Gemini em linguagem natural |
+| `POST` | `/api/advisor/analyze` | Diagnóstico estratégico completo cruzando transações reais do mês com os 8 Mestres |
+| `POST` | `/api/advisor/ask` | Consultoria interativa em tempo real com os 8 Mestres para dúvidas financeiras e simulações |
 
 ---
 

@@ -77,6 +77,12 @@ export type TransactionFilter = {
   budgetGroup: 'all' | BudgetGroup;
 };
 
+export interface BudgetItem {
+  id: string;
+  name: string;
+  amount: number;
+}
+
 export interface MonthlyBudget {
   id: string; // 'YYYY-MM'
   month: string; // 'YYYY-MM'
@@ -88,6 +94,13 @@ export interface MonthlyBudget {
     educacao: number;
     lazer: number;
     adicional: number;
+  };
+  group_items?: {
+    essencial?: BudgetItem[];
+    investimento?: BudgetItem[];
+    educacao?: BudgetItem[];
+    lazer?: BudgetItem[];
+    adicional?: BudgetItem[];
   };
   notes?: string;
   updated_at?: string;
@@ -117,4 +130,50 @@ export interface MonthlyBudgetSummary {
   isExceeded: boolean;
   excessAmount: number;
   groups: BudgetStatusGroup[];
+}
+
+export interface AdvisorPillar {
+  title: string;
+  mentor: string;
+  advice: string;
+  impact: 'alto' | 'medio' | 'critico';
+}
+
+export interface AdvisorActionItem {
+  title: string;
+  description: string;
+  priority: 'urgente' | 'alta' | 'estrategica';
+  targetDate?: string;
+}
+
+export interface StrategicAdvisorAnalysis {
+  headline: string;
+  summary: string;
+  financialHealthScore: number; // 0 - 100
+  kpis: {
+    monthlySavingsRate: string;
+    budgetDiscipline: string;
+    debtTargetProgress: string;
+    runwaySecurity: string;
+  };
+  pillars: AdvisorPillar[];
+  actionPlan8020: AdvisorActionItem[];
+  debtStrategy: {
+    avalancheRecommendation: string;
+    estimatedRunway: string;
+  };
+  ecommerceOpportunity: {
+    scalingRecommendation: string;
+    immediateStep: string;
+  };
+  timestamp: string;
+  modelUsed?: string;
+  fallbackUsed?: boolean;
+}
+
+export interface AdvisorChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
 }

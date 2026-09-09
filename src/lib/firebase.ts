@@ -532,6 +532,45 @@ export function subscribeMonthlyBudgets(
             lazer: Number(data.group_limits?.lazer) || 0,
             adicional: Number(data.group_limits?.adicional) || 0
           },
+          group_items: data.group_items
+            ? {
+                essencial: Array.isArray(data.group_items?.essencial)
+                  ? data.group_items.essencial.map((it: any) => ({
+                      id: String(it.id || Math.random()),
+                      name: String(it.name || ''),
+                      amount: Number(it.amount) || 0
+                    }))
+                  : [],
+                investimento: Array.isArray(data.group_items?.investimento)
+                  ? data.group_items.investimento.map((it: any) => ({
+                      id: String(it.id || Math.random()),
+                      name: String(it.name || ''),
+                      amount: Number(it.amount) || 0
+                    }))
+                  : [],
+                educacao: Array.isArray(data.group_items?.educacao)
+                  ? data.group_items.educacao.map((it: any) => ({
+                      id: String(it.id || Math.random()),
+                      name: String(it.name || ''),
+                      amount: Number(it.amount) || 0
+                    }))
+                  : [],
+                lazer: Array.isArray(data.group_items?.lazer)
+                  ? data.group_items.lazer.map((it: any) => ({
+                      id: String(it.id || Math.random()),
+                      name: String(it.name || ''),
+                      amount: Number(it.amount) || 0
+                    }))
+                  : [],
+                adicional: Array.isArray(data.group_items?.adicional)
+                  ? data.group_items.adicional.map((it: any) => ({
+                      id: String(it.id || Math.random()),
+                      name: String(it.name || ''),
+                      amount: Number(it.amount) || 0
+                    }))
+                  : []
+              }
+            : undefined,
           notes: data.notes || '',
           updated_at: data.updated_at
         };
@@ -552,7 +591,7 @@ export async function saveMonthlyBudget(budget: Omit<MonthlyBudget, 'id'> & { id
   const path = `budgets/${monthId}`;
   try {
     const docRef = doc(firestore, 'budgets', monthId);
-    const payload = {
+    const payload: Record<string, any> = {
       month: budget.month,
       total_expense_limit: Number(budget.total_expense_limit) || 0,
       expected_income: Number(budget.expected_income) || 0,
@@ -566,6 +605,37 @@ export async function saveMonthlyBudget(budget: Omit<MonthlyBudget, 'id'> & { id
       notes: budget.notes || '',
       updated_at: new Date().toISOString()
     };
+
+    if (budget.group_items) {
+      payload.group_items = {
+        essencial: (budget.group_items.essencial || []).map((it) => ({
+          id: it.id,
+          name: it.name.trim(),
+          amount: Number(it.amount) || 0
+        })),
+        investimento: (budget.group_items.investimento || []).map((it) => ({
+          id: it.id,
+          name: it.name.trim(),
+          amount: Number(it.amount) || 0
+        })),
+        educacao: (budget.group_items.educacao || []).map((it) => ({
+          id: it.id,
+          name: it.name.trim(),
+          amount: Number(it.amount) || 0
+        })),
+        lazer: (budget.group_items.lazer || []).map((it) => ({
+          id: it.id,
+          name: it.name.trim(),
+          amount: Number(it.amount) || 0
+        })),
+        adicional: (budget.group_items.adicional || []).map((it) => ({
+          id: it.id,
+          name: it.name.trim(),
+          amount: Number(it.amount) || 0
+        }))
+      };
+    }
+
     await setDoc(docRef, payload, { merge: true });
     return monthId;
   } catch (err) {

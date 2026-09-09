@@ -21,13 +21,15 @@
     },
     "budgets": {
       "title": "Orçamentos Mensais",
-      "description": "Definição de metas orçamentárias mensais e limites por grupo 50-30-20",
+      "description": "Definição de metas orçamentárias mensais com limites e itens rotineiros por grupo 50-30-20",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
         "month": { "type": "string", "description": "Mês no formato YYYY-MM" },
         "total_expense_limit": { "type": "number" },
         "expected_income": { "type": "number" },
+        "group_limits": { "type": "object", "description": "Limites totais por grupo orçamentário" },
+        "group_items": { "type": "object", "description": "Itens rotineiros configurados por grupo" },
         "notes": { "type": "string" },
         "updated_at": { "type": "string" }
       },

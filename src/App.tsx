@@ -6,6 +6,7 @@ import { DashboardCards } from './components/DashboardCards';
 import { BudgetPieChart } from './components/BudgetPieChart';
 import { TopLocalsBarChart } from './components/TopLocalsBarChart';
 import { TransactionsTable } from './components/TransactionsTable';
+import { AIStrategicAdvisorCard } from './components/AIStrategicAdvisorCard';
 import { MonthlyBudgetView } from './components/MonthlyBudgetView';
 import { BudgetAlertBanner } from './components/BudgetAlertBanner';
 import { AuthGate } from './components/AuthGate';
@@ -117,7 +118,23 @@ function AuthenticatedDashboard({
       }
     });
 
-    const totalLimit = currentBudget?.total_expense_limit || 0;
+    // Calculate total limit with fallback to sum of group_items if not explicitly set
+    let totalLimit = currentBudget?.total_expense_limit || 0;
+    if (totalLimit === 0 && currentBudget?.group_items) {
+      let itemsSum = 0;
+      Object.keys(currentBudget.group_items).forEach((k) => {
+        const list = currentBudget.group_items?.[k as BudgetGroup];
+        if (Array.isArray(list)) {
+          list.forEach((item) => {
+            itemsSum += Number(item.amount) || 0;
+          });
+        }
+      });
+      if (itemsSum > 0) {
+        totalLimit = itemsSum;
+      }
+    }
+
     const expectedIncome = currentBudget?.expected_income || 0;
     const hasBudget = currentBudget !== null && totalLimit > 0;
     const isExceeded = hasBudget && totalExpense > totalLimit;
@@ -128,7 +145,13 @@ function AuthenticatedDashboard({
     // Groups breakdown
     const groupKeys: BudgetGroup[] = ['essencial', 'investimento', 'lazer', 'educacao', 'adicional'];
     const groups: BudgetStatusGroup[] = groupKeys.map((key) => {
-      const limit = currentBudget?.group_limits ? Number(currentBudget.group_limits[key as keyof typeof currentBudget.group_limits]) || 0 : 0;
+      let limit = currentBudget?.group_limits ? Number(currentBudget.group_limits[key as keyof typeof currentBudget.group_limits]) || 0 : 0;
+      if (limit === 0 && currentBudget?.group_items?.[key as keyof typeof currentBudget.group_items]) {
+        limit = currentBudget.group_items[key as keyof typeof currentBudget.group_items]!.reduce(
+          (sum, it) => sum + (Number(it.amount) || 0),
+          0
+        );
+      }
       const spent = groupSpentMap[key] || 0;
       const grpExceeded = limit > 0 && spent > limit;
       const remaining = limit > 0 ? Math.max(0, limit - spent) : 0;
@@ -315,7 +338,15 @@ function AuthenticatedDashboard({
               </div>
             </div>
 
-            {/* 3. Bottom Bento Row: Full Width Transactions Table */}
+            {/* 3. AI Strategic Financial Advisor (Conselheiro Estratégico) */}
+            <AIStrategicAdvisorCard
+              transactions={transactions}
+              financialSummary={financialSummary}
+              monthlyBudgetSummary={monthlyBudgetSummary}
+              selectedMonth={selectedMonth}
+            />
+
+            {/* 4. Bottom Bento Row: Full Width Transactions Table */}
             <TransactionsTable transactions={transactions} />
           </div>
         )}
